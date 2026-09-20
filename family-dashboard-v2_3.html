@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="60">
     <title>Family Dashboard</title>
     <style>
         * {
@@ -175,10 +176,10 @@
         const dots = document.querySelectorAll('.dot');
         const titles = ['To Do List', 'Family Calendar', 'Prayer Times'];
 
-        // Auto-refresh page every 5 minutes (300000 milliseconds)
+        // Auto-refresh page every 1 minute (60000 milliseconds)
         setInterval(() => {
             location.reload();
-        }, 300000);
+        }, 60000);
 
         // Fetch and display prayer times
         async function fetchPrayerTimes() {
