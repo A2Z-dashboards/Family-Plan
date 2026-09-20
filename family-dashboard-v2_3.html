@@ -126,23 +126,30 @@
 
         <!-- Slide 3: Prayer Times -->
         <div class="slide" id="slide3">
-            <div style="width: 100%; height: 100%; display: flex; background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%); color: white; font-family: Arial, sans-serif; overflow: hidden;">
-                <!-- Left Side: Prayer Times List -->
-                <div style="flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; font-size: 32px; line-height: 2.5;">
-                    <h1 style="font-size: 48px; margin-bottom: 30px; text-align: center;">Prayer Times - Dubai</h1>
-                    <div><strong>Fajr:</strong> <span id="fajr">--:--</span></div>
-                    <div><strong>Sunrise:</strong> <span id="sunrise">--:--</span></div>
-                    <div><strong>Dhuhr:</strong> <span id="dhuhr">--:--</span></div>
-                    <div><strong>Asr:</strong> <span id="asr">--:--</span></div>
-                    <div><strong>Maghrib:</strong> <span id="maghrib">--:--</span></div>
-                    <div><strong>Isha:</strong> <span id="isha">--:--</span></div>
-                </div>
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%); color: white; font-family: Arial, sans-serif; padding: 30px; overflow: hidden;">
+                
+                <!-- Title -->
+                <h1 style="text-align: center; font-size: 42px; margin-bottom: 20px; margin-top: 10px;">Prayer Times - Dubai</h1>
+                
+                <!-- Main Container -->
+                <div style="display: flex; gap: 40px; flex: 1; align-items: center;">
+                    
+                    <!-- Left: Prayer Times List -->
+                    <div style="flex: 1; font-size: 28px; line-height: 2.2;">
+                        <div style="margin: 10px 0;"><span style="font-weight: bold; display: inline-block; width: 150px;">Fajr:</span> <span style="font-size: 32px; font-weight: bold; color: #90EE90;" id="fajr">--:--</span></div>
+                        <div style="margin: 10px 0;"><span style="font-weight: bold; display: inline-block; width: 150px;">Sunrise:</span> <span style="font-size: 32px; font-weight: bold; color: #FFD700;" id="sunrise">--:--</span></div>
+                        <div style="margin: 10px 0;"><span style="font-weight: bold; display: inline-block; width: 150px;">Dhuhr:</span> <span style="font-size: 32px; font-weight: bold; color: #87CEEB;" id="dhuhr">--:--</span></div>
+                        <div style="margin: 10px 0;"><span style="font-weight: bold; display: inline-block; width: 150px;">Asr:</span> <span style="font-size: 32px; font-weight: bold; color: #FFA500;" id="asr">--:--</span></div>
+                        <div style="margin: 10px 0;"><span style="font-weight: bold; display: inline-block; width: 150px;">Maghrib:</span> <span style="font-size: 32px; font-weight: bold; color: #FF6B6B;" id="maghrib">--:--</span></div>
+                        <div style="margin: 10px 0;"><span style="font-weight: bold; display: inline-block; width: 150px;">Isha:</span> <span style="font-size: 32px; font-weight: bold; color: #9370DB;" id="isha">--:--</span></div>
+                    </div>
 
-                <!-- Right Side: Next Salah Countdown -->
-                <div style="flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.3); text-align: center;">
-                    <h2 style="font-size: 36px; margin-bottom: 30px;">Next Salah</h2>
-                    <div style="font-size: 48px; font-weight: bold; margin-bottom: 30px;" id="nextSalahName">--</div>
-                    <div style="font-size: 64px; font-weight: bold; font-family: monospace;" id="countdown">00:00:00</div>
+                    <!-- Right: Next Salah Countdown -->
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.4); padding: 40px; border-radius: 15px; text-align: center;">
+                        <h2 style="font-size: 36px; margin-bottom: 20px; color: #FFD700;">Next Salah</h2>
+                        <div style="font-size: 56px; font-weight: bold; margin-bottom: 30px; color: #90EE90;" id="nextSalahName">--</div>
+                        <div style="font-size: 72px; font-weight: bold; font-family: 'Courier New', monospace; color: #FFD700; letter-spacing: 5px;" id="countdown">00:00:00</div>
+                    </div>
                 </div>
             </div>
         </div>
