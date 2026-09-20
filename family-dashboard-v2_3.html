@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .carousel {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .timer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 100;
+        }
+
+        .dots {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel">
+        <!-- Slide 1: To Do List -->
+        <div class="slide active" id="slide1">
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSoW9iHQE3EQaUedVKfmwu32cUZkzuHtr-ifLUfwC827AuU2y35sZDyFbw93o1B4owXmcQpnqmcc4Tv/pubhtml?widget=true&headers=false"></iframe>
+        </div>
+
+        <!-- Slide 2: Calendar -->
+        <div class="slide" id="slide2">
+            <iframe src="https://calendar.google.com/calendar/embed?src=2df1ecb2223966206e5e62b5eb8b20c8d381824522d766e199c5283f6f97a992%40group.calendar.google.com&ctz=Asia%2FDubai&mode=week"></iframe>
+        </div>
+    </div>
+
+    <div class="timer" id="timer">30</div>
+
+    <div class="dots">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let timeLeft = 30;
+        const TOTAL_TIME = 30;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        const titles = ['To Do List', 'Family Calendar'];
+
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            slides[n].classList.add('active');
+            dots[n].classList.add('active');
+            
+            timeLeft = TOTAL_TIME;
+            updateTimer();
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            showSlide(currentSlide);
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function updateTimer() {
+            document.getElementById('timer').textContent = timeLeft;
+        }
+
+        // Start countdown
+        setInterval(() => {
+            timeLeft--;
+            updateTimer();
+            if (timeLeft <= 0) {
+                nextSlide();
+            }
+        }, 1000);
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
