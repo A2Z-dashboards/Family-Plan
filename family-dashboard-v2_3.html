@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="300">
     <title>Family Dashboard</title>
     <style>
         * {
@@ -84,6 +83,33 @@
             background: white;
             transform: scale(1.2);
         }
+
+        .button {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        #refreshBtn {
+            top: 20px;
+            right: 20px;
+        }
+
+        #nextBtn {
+            bottom: 20px;
+            right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -97,22 +123,165 @@
         <div class="slide" id="slide2">
             <iframe src="https://calendar.google.com/calendar/embed?src=2df1ecb2223966206e5e62b5eb8b20c8d381824522d766e199c5283f6f97a992%40group.calendar.google.com&ctz=Asia%2FDubai&mode=week"></iframe>
         </div>
+
+        <!-- Slide 3: Prayer Times -->
+        <div class="slide" id="slide3">
+            <div style="width: 100%; height: 100%; display: flex; background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%); color: white; font-family: Arial, sans-serif; overflow: hidden;">
+                <!-- Left Side: Prayer Times List -->
+                <div style="flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; font-size: 32px; line-height: 2.5;">
+                    <h1 style="font-size: 48px; margin-bottom: 30px; text-align: center;">Prayer Times - Dubai</h1>
+                    <div><strong>Fajr:</strong> <span id="fajr">--:--</span></div>
+                    <div><strong>Sunrise:</strong> <span id="sunrise">--:--</span></div>
+                    <div><strong>Dhuhr:</strong> <span id="dhuhr">--:--</span></div>
+                    <div><strong>Asr:</strong> <span id="asr">--:--</span></div>
+                    <div><strong>Maghrib:</strong> <span id="maghrib">--:--</span></div>
+                    <div><strong>Isha:</strong> <span id="isha">--:--</span></div>
+                </div>
+
+                <!-- Right Side: Next Salah Countdown -->
+                <div style="flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.3); text-align: center;">
+                    <h2 style="font-size: 36px; margin-bottom: 30px;">Next Salah</h2>
+                    <div style="font-size: 48px; font-weight: bold; margin-bottom: 30px;" id="nextSalahName">--</div>
+                    <div style="font-size: 64px; font-weight: bold; font-family: monospace;" id="countdown">00:00:00</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="timer" id="timer">30</div>
+    <div class="timer" id="timer">15</div>
+
+    <button class="button" id="refreshBtn" onclick="location.reload()">Refresh</button>
+
+    <button class="button" id="nextBtn" onclick="nextSlide()">Next</button>
 
     <div class="dots">
         <div class="dot active" onclick="goToSlide(0)"></div>
         <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
     </div>
 
     <script>
         let currentSlide = 0;
-        let timeLeft = 30;
-        const TOTAL_TIME = 30;
+        let timeLeft = 15;
+        const TOTAL_TIME = 15;
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
-        const titles = ['To Do List', 'Family Calendar'];
+        const titles = ['To Do List', 'Family Calendar', 'Prayer Times'];
+
+        // Auto-refresh page every 5 minutes (300000 milliseconds)
+        setInterval(() => {
+            location.reload();
+        }, 300000);
+
+        // Fetch and display prayer times
+        async function fetchPrayerTimes() {
+            try {
+                // Using Aladhan API with JSONP approach
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                
+                const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${day}-${month}-${year}?city=Dubai&country=UAE&method=5`);
+                const data = await response.json();
+                
+                if (data.data && data.data.timings) {
+                    const times = data.data.timings;
+                    
+                    // Display prayer times
+                    document.getElementById('fajr').textContent = times.Fajr;
+                    document.getElementById('sunrise').textContent = times.Sunrise;
+                    document.getElementById('dhuhr').textContent = times.Dhuhr;
+                    document.getElementById('asr').textContent = times.Asr;
+                    document.getElementById('maghrib').textContent = times.Maghrib;
+                    document.getElementById('isha').textContent = times.Isha;
+                    
+                    // Start countdown
+                    startCountdown(times);
+                }
+            } catch (error) {
+                console.log('Prayer times error:', error);
+                // Use static times as fallback for Dubai (approximate)
+                const fallbackTimes = {
+                    Fajr: '05:30',
+                    Sunrise: '06:45',
+                    Dhuhr: '12:15',
+                    Asr: '15:30',
+                    Maghrib: '18:00',
+                    Isha: '19:30'
+                };
+                
+                document.getElementById('fajr').textContent = fallbackTimes.Fajr;
+                document.getElementById('sunrise').textContent = fallbackTimes.Sunrise;
+                document.getElementById('dhuhr').textContent = fallbackTimes.Dhuhr;
+                document.getElementById('asr').textContent = fallbackTimes.Asr;
+                document.getElementById('maghrib').textContent = fallbackTimes.Maghrib;
+                document.getElementById('isha').textContent = fallbackTimes.Isha;
+                
+                startCountdown(fallbackTimes);
+            }
+        }
+
+        function startCountdown(times) {
+            const prayers = [
+                { name: 'Fajr', time: times.Fajr },
+                { name: 'Sunrise', time: times.Sunrise },
+                { name: 'Dhuhr', time: times.Dhuhr },
+                { name: 'Asr', time: times.Asr },
+                { name: 'Maghrib', time: times.Maghrib },
+                { name: 'Isha', time: times.Isha }
+            ];
+
+            function updateCountdown() {
+                const now = new Date();
+                const currentTimeMinutes = now.getHours() * 60 + now.getMinutes();
+                
+                let nextPrayer = null;
+                
+                for (let prayer of prayers) {
+                    const [hours, minutes] = prayer.time.split(':').map(Number);
+                    const prayerTimeMinutes = hours * 60 + minutes;
+                    
+                    if (prayerTimeMinutes > currentTimeMinutes) {
+                        nextPrayer = prayer;
+                        break;
+                    }
+                }
+                
+                // If no prayer found today, next is Fajr tomorrow
+                if (!nextPrayer) {
+                    nextPrayer = prayers[0]; // Fajr
+                }
+                
+                document.getElementById('nextSalahName').textContent = nextPrayer.name;
+                
+                // Calculate countdown
+                const [hours, minutes] = nextPrayer.time.split(':').map(Number);
+                const prayerDate = new Date();
+                prayerDate.setHours(hours, minutes, 0, 0);
+                
+                if (prayerDate < now) {
+                    prayerDate.setDate(prayerDate.getDate() + 1);
+                }
+                
+                const diff = prayerDate - now;
+                const countdownHours = Math.floor(diff / 3600000);
+                const countdownMinutes = Math.floor((diff % 3600000) / 60000);
+                const countdownSeconds = Math.floor((diff % 60000) / 1000);
+                
+                const countdownStr = String(countdownHours).padStart(2, '0') + ':' +
+                                   String(countdownMinutes).padStart(2, '0') + ':' +
+                                   String(countdownSeconds).padStart(2, '0');
+                
+                document.getElementById('countdown').textContent = countdownStr;
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // Load prayer times when page loads
+        fetchPrayerTimes();
 
         function showSlide(n) {
             slides.forEach(s => s.classList.remove('active'));
