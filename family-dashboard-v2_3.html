@@ -148,6 +148,16 @@
                 </div>
             </div>
         </div>
+
+        <!-- Slide 4: News -->
+        <div class="slide" id="slide4">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%); color: white; font-family: Arial, sans-serif; padding: 40px; overflow: auto;">
+                <h1 style="text-align: center; font-size: 48px; margin-bottom: 30px;">Latest News</h1>
+                <div id="newsContainer" style="flex: 1; font-size: 24px; line-height: 1.8;">
+                    <div style="text-align: center; color: #aaa;">Loading news...</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="timer" id="timer">15</div>
@@ -158,15 +168,45 @@
         <div class="dot active" onclick="goToSlide(0)"></div>
         <div class="dot" onclick="goToSlide(1)"></div>
         <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
     </div>
 
     <script>
         let currentSlide = 0;
         let timeLeft = 15;
-        const TOTAL_TIME = 15;
+        let TOTAL_TIME = 15;
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
-        const titles = ['To Do List', 'Family Calendar', 'Prayer Times'];
+        const slideTitles = ['To Do List', 'Family Calendar', 'Prayer Times', 'News'];
+        
+        // Variable timing: news gets 10 seconds, others get 15
+        const slideTiming = [15, 15, 15, 10];
+
+        // Fetch and display news
+        async function loadNews() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/A2Z-dashboards/Family-Plan/main/news-data.json');
+                const data = await response.json();
+                
+                const newsContainer = document.getElementById('newsContainer');
+                newsContainer.innerHTML = '';
+                
+                if (data.news && data.news.length > 0) {
+                    data.news.forEach((item, index) => {
+                        const bullet = document.createElement('div');
+                        bullet.style.marginBottom = '15px';
+                        bullet.style.paddingLeft = '30px';
+                        bullet.innerHTML = `<span style="color: #FFD700;">•</span> <span style="color: #aaa; font-size: 18px;">[${item.category}]</span> ${item.text}`;
+                        newsContainer.appendChild(bullet);
+                    });
+                } else {
+                    newsContainer.innerHTML = '<div style="text-align: center; color: #aaa;">No news available</div>';
+                }
+            } catch (error) {
+                console.log('News loading error:', error);
+                document.getElementById('newsContainer').innerHTML = '<div style="text-align: center; color: #aaa;">Unable to load news</div>';
+            }
+        }
 
         // Fetch and display prayer times
         async function fetchPrayerTimes() {
@@ -275,9 +315,6 @@
             setInterval(updateCountdown, 1000);
         }
 
-        // Load prayer times when page loads
-        fetchPrayerTimes();
-
         function showSlide(n) {
             slides.forEach(s => s.classList.remove('active'));
             dots.forEach(d => d.classList.remove('active'));
@@ -285,6 +322,7 @@
             slides[n].classList.add('active');
             dots[n].classList.add('active');
             
+            TOTAL_TIME = slideTiming[n];
             timeLeft = TOTAL_TIME;
             updateTimer();
         }
@@ -303,7 +341,7 @@
             document.getElementById('timer').textContent = timeLeft;
         }
 
-        // Start countdown
+        // Start countdown with variable timing
         setInterval(() => {
             timeLeft--;
             updateTimer();
@@ -313,6 +351,8 @@
         }, 1000);
 
         // Initialize
+        fetchPrayerTimes();
+        loadNews();
         showSlide(0);
     </script>
 </body>
