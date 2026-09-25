@@ -140,16 +140,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Slide 4: Al Jazeera News -->
-        <div class="slide" id="slide4">
-            <iframe src="https://www.aljazeera.com/" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
-
-        <!-- Slide 5: Football News -->
-        <div class="slide" id="slide5">
-            <iframe src="https://www.skysports.com/football" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
     </div>
 
     <div class="timer" id="timer">15</div>
@@ -160,8 +150,6 @@
         <div class="dot active" onclick="goToSlide(0)"></div>
         <div class="dot" onclick="goToSlide(1)"></div>
         <div class="dot" onclick="goToSlide(2)"></div>
-        <div class="dot" onclick="goToSlide(3)"></div>
-        <div class="dot" onclick="goToSlide(4)"></div>
     </div>
 
     <script>
@@ -170,10 +158,10 @@
         let TOTAL_TIME = 15;
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
-        const slideTitles = ['To Do List', 'Family Calendar', 'Prayer Times', 'Al Jazeera News', 'Football News'];
+        const slideTitles = ['To Do List', 'Family Calendar', 'Prayer Times'];
         
-        // All slides get 15 seconds, except news and football get 10
-        const slideTiming = [15, 15, 15, 10, 10];
+        // All slides get 15 seconds
+        const slideTiming = [15, 15, 15];
 
         async function fetchPrayerTimes() {
             try {
